@@ -67,18 +67,18 @@ Use Markdown e LaTeX para formatar títulos, listas e fórmulas matemáticas.
 
 # 🚀 Interface Streamlit
 set_background("bg.jpg", darkness=0.5)  # <- aplica fundo
-st.title("⚛️ Assistente de Tópicos de Física")
 
 # Cria 3 colunas (esquerda, centro, direita)
-col1, col2, col3 = st.columns([2, 1, 2]) 
+col1, col2, col3 = st.columns([1, 1.7, 1]) 
 
-with col1:  
+with col2:
+    st.title("⚛️ Assistente de Tópicos de Física")  
     topico = st.text_input(
         "Insira o tópico de Física", 
         placeholder="Ex: Lei da Gravitação Universal"
     )
 
-if st.button("Explicar"):
-    with st.spinner("Gerando explicação..."):
-        resposta = explicar_topico(topico)
-        st.markdown(resposta, unsafe_allow_html=True)  # Markdown + LaTeX renderizado
+    if st.button("Explicar"):
+        with st.spinner("Gerando explicação..."):
+            resposta = explicar_topico(topico)
+            st.markdown(resposta, unsafe_allow_html=True)  # Markdown + LaTeX renderizado
