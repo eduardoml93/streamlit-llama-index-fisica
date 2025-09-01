@@ -40,7 +40,7 @@ def set_background(image_file="bg.jpg", darkness=0.5):
 
 # 🔑 Coloque sua chave aqui
 key = "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"
-llm = Groq(model="llama3-70b-8192", api_key=key)
+llm = Groq(model="llama-3.1-8b-instant", api_key=key)
 
 def explicar_topico(topico):
     if not topico:
@@ -82,3 +82,4 @@ with col2:
         with st.spinner("Gerando explicação..."):
             resposta = explicar_topico(topico)
             st.markdown(resposta, unsafe_allow_html=True)  # Markdown + LaTeX renderizado
+
