@@ -87,39 +87,41 @@ if not st.session_state.api_key:
         unsafe_allow_html=True,
     )
 
-    api_key_input = st.text_input("Insira sua API Key da Groq:", type="password")
-
-    if st.button("Entrar"):
-        if api_key_input.strip():
-            try:
-                # Testa o LLM antes de liberar
-                llm = Groq(model="llama-3.1-8b-instant", api_key=api_key_input.strip())
-                _ = llm.complete("Teste rápido.")
-                st.session_state.api_key = api_key_input.strip()
-                st.session_state.llm = llm
-                st.success("✅ Login realizado com sucesso!")
-                st.rerun()   # 🔄 Atualiza a tela
-            except Exception as e:
-                st.error(f"Erro ao validar a chave: {e}")
-        else:
-            st.warning("⚠️ Digite sua chave de API para continuar.")
+    col1, col2, col3 = st.columns([1,2,1])  # centraliza no meio
+    with col2:
+        api_key_input = st.text_input("Insira sua API Key da Groq:", type="password")
+        if st.button("Entrar"):
+            if api_key_input.strip():
+                try:
+                    # Testa o LLM antes de liberar
+                    llm = Groq(model="llama-3.1-8b-instant", api_key=api_key_input.strip())
+                    _ = llm.complete("Teste rápido.")
+                    st.session_state.api_key = api_key_input.strip()
+                    st.session_state.llm = llm
+                    st.success("✅ Login realizado com sucesso!")
+                    st.rerun()   # 🔄 Atualiza a tela
+                except Exception as e:
+                    st.error(f"Erro ao validar a chave: {e}")
+            else:
+                st.warning("⚠️ Digite sua chave de API para continuar.")
 
 # Página 2: Aplicação principal
 else:
     st.markdown('<div class="title-box">⚛️ Assistente de Tópicos de Física</div>', unsafe_allow_html=True)
 
-    topico = st.text_input(
-        "Insira o tópico de Física", 
-        placeholder="Ex: Lei da Gravitação Universal"
-    )
+    col1, col2, col3 = st.columns([1,2,1])  # centraliza no meio
+    with col2:
+        topico = st.text_input(
+            "Insira o tópico de Física", 
+            placeholder="Ex: Lei da Gravitação Universal"
+        )
 
-    if st.button("Explicar"):
-        with st.spinner("Gerando explicação..."):
-            resposta = explicar_topico(topico)
-            st.markdown(resposta, unsafe_allow_html=True)
+        if st.button("Explicar"):
+            with st.spinner("Gerando explicação..."):
+                resposta = explicar_topico(topico)
+                st.markdown(resposta, unsafe_allow_html=True)
 
-    # Botão de logout
-    if st.button("🚪 Sair"):
-        st.session_state.api_key = None
-        st.session_state.llm = None
-        st.rerun()
+        if st.button("🚪 Sair"):
+            st.session_state.api_key = None
+            st.session_state.llm = None
+            st.rerun()
