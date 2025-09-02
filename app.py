@@ -70,7 +70,7 @@ Use Markdown e LaTeX para formatar títulos, listas e fórmulas matemáticas.
 # ----------------------------
 set_background("bg.jpg", darkness=0.5)
 
-# Verifica se já tem API Key salva
+# Inicializa sessão
 if "api_key" not in st.session_state:
     st.session_state.api_key = None
     st.session_state.llm = None
@@ -86,12 +86,11 @@ if not st.session_state.api_key:
             try:
                 # Testa o LLM antes de liberar
                 llm = Groq(model="llama-3.1-8b-instant", api_key=api_key_input.strip())
-                # Faz um teste simples
                 _ = llm.complete("Teste rápido.")
                 st.session_state.api_key = api_key_input.strip()
                 st.session_state.llm = llm
                 st.success("✅ Login realizado com sucesso!")
-                st.experimental_rerun()
+                st.rerun()   # 🔄 Atualiza a tela
             except Exception as e:
                 st.error(f"Erro ao validar a chave: {e}")
         else:
@@ -117,4 +116,4 @@ else:
     if st.button("🚪 Sair"):
         st.session_state.api_key = None
         st.session_state.llm = None
-        st.experimental_rerun()
+        st.rerun()   # 🔄 Atualiza a tela
