@@ -77,18 +77,17 @@ if "api_key" not in st.session_state:
 
 # Página 1: Login
 if not st.session_state.api_key:
-    st.title("🔑 Login para Assistente de Física")
-
-    st.markdown(
-        """
-        Para gerar sua **API Key da Groq**, acesse:  
-        👉 [https://console.groq.com/keys](https://console.groq.com/keys)
-        """,
-        unsafe_allow_html=True,
-    )
-
     col1, col2, col3 = st.columns([1,2,1])  # centraliza no meio
     with col2:
+        st.title("🔑 Login para Assistente de Física")
+
+        st.markdown(
+            """
+            Para gerar sua **API Key da Groq**, acesse:  
+            👉 [https://console.groq.com/keys](https://console.groq.com/keys)
+            """,
+            unsafe_allow_html=True,
+        )
         api_key_input = st.text_input("Insira sua API Key da Groq:", type="password")
         if st.button("Entrar"):
             if api_key_input.strip():
