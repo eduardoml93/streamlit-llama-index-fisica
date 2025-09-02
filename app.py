@@ -39,7 +39,7 @@ def set_background(image_file="bg.jpg", darkness=0.5):
     st.markdown(css, unsafe_allow_html=True)
 
 # ----------------------------
-# Funções do app
+# Função para gerar explicação
 # ----------------------------
 def explicar_topico(topico):
     if not topico:
@@ -69,8 +69,6 @@ Use Markdown e LaTeX para formatar títulos, listas e fórmulas matemáticas.
 # Interface
 # ----------------------------
 set_background("bg.jpg", darkness=0.5)
-# Divide em 3 colunas, a do meio será menor
-col1, col2, col3 = st.columns([2, 1.5, 2])  
 
 # Inicializa sessão
 if "api_key" not in st.session_state:
@@ -78,18 +76,16 @@ if "api_key" not in st.session_state:
     st.session_state.llm = None
 
 # Página 1: Login
-with col2:
-    if not st.session_state.api_key:
-        st.title("🔑 Login para Assistente de Física")
-    
-        st.markdown(
-            """
-            Para gerar sua **API Key da Groq**, acesse:  
-            👉 [https://console.groq.com/keys](https://console.groq.com/keys)
-            """,
-            unsafe_allow_html=True,
-        )
+if not st.session_state.api_key:
+    st.title("🔑 Login para Assistente de Física")
 
+    st.markdown(
+        """
+        Para gerar sua **API Key da Groq**, acesse:  
+        👉 [https://console.groq.com/keys](https://console.groq.com/keys)
+        """,
+        unsafe_allow_html=True,
+    )
 
     api_key_input = st.text_input("Insira sua API Key da Groq:", type="password")
 
@@ -108,22 +104,22 @@ with col2:
         else:
             st.warning("⚠️ Digite sua chave de API para continuar.")
 
-    # Página 2: Aplicação principal
-    else:
-        with col2:
-            st.title("⚛️ Assistente de Tópicos de Física")  
-            topico = st.text_input(
-                "Insira o tópico de Física", 
-                placeholder="Ex: Lei da Gravitação Universal"
-            )
-    
-            if st.button("Explicar"):
-                with st.spinner("Gerando explicação..."):
-                    resposta = explicar_topico(topico)
-                    st.markdown(resposta, unsafe_allow_html=True)
-    
-        # Botão de logout
-        if st.button("🚪 Sair"):
-            st.session_state.api_key = None
-            st.session_state.llm = None
-            st.rerun()   # 🔄 Atualiza a tela
+# Página 2: Aplicação principal
+else:
+    st.markdown('<div class="title-box">⚛️ Assistente de Tópicos de Física</div>', unsafe_allow_html=True)
+
+    topico = st.text_input(
+        "Insira o tópico de Física", 
+        placeholder="Ex: Lei da Gravitação Universal"
+    )
+
+    if st.button("Explicar"):
+        with st.spinner("Gerando explicação..."):
+            resposta = explicar_topico(topico)
+            st.markdown(resposta, unsafe_allow_html=True)
+
+    # Botão de logout
+    if st.button("🚪 Sair"):
+        st.session_state.api_key = None
+        st.session_state.llm = None
+        st.rerun()
