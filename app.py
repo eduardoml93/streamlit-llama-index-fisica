@@ -75,44 +75,8 @@ if "api_key" not in st.session_state:
     st.session_state.api_key = None
     st.session_state.llm = None
 
-# ----------------------------
-# CSS para centralizar login
-# ----------------------------
-st.markdown(
-    """
-    <style>
-    /* Centraliza vertical e horizontalmente */
-    .login-container {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 80vh; /* ocupa quase toda a tela */
-        text-align: center;
-    }
-
-    /* Ajusta largura da caixa de texto */
-    .login-container .stTextInput > div > div > input {
-        width: 300px;   /* tamanho fixo do input */
-        text-align: center;
-        margin: auto;
-    }
-
-    /* Ajusta botão */
-    .login-container button {
-        margin-top: 10px;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
-# ----------------------------
-# Tela de login centralizada
-# ----------------------------
+# Página 1: Login
 if not st.session_state.api_key:
-    st.markdown("<div class='login-container'>", unsafe_allow_html=True)
-
     st.title("🔑 Login para Assistente de Física")
 
     st.markdown(
@@ -128,18 +92,17 @@ if not st.session_state.api_key:
     if st.button("Entrar"):
         if api_key_input.strip():
             try:
+                # Testa o LLM antes de liberar
                 llm = Groq(model="llama-3.1-8b-instant", api_key=api_key_input.strip())
                 _ = llm.complete("Teste rápido.")
                 st.session_state.api_key = api_key_input.strip()
                 st.session_state.llm = llm
                 st.success("✅ Login realizado com sucesso!")
-                st.rerun()
+                st.rerun()   # 🔄 Atualiza a tela
             except Exception as e:
                 st.error(f"Erro ao validar a chave: {e}")
         else:
             st.warning("⚠️ Digite sua chave de API para continuar.")
-
-    st.markdown("</div>", unsafe_allow_html=True)
 
 # Página 2: Aplicação principal
 else:
