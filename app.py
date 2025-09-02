@@ -69,6 +69,8 @@ Use Markdown e LaTeX para formatar títulos, listas e fórmulas matemáticas.
 # Interface
 # ----------------------------
 set_background("bg.jpg", darkness=0.5)
+# Divide em 3 colunas, a do meio será menor
+col1, col2, col3 = st.columns([2, 1.5, 2])  
 
 # Inicializa sessão
 if "api_key" not in st.session_state:
@@ -76,37 +78,35 @@ if "api_key" not in st.session_state:
     st.session_state.llm = None
 
 # Página 1: Login
-if not st.session_state.api_key:
-    st.title("🔑 Login para Assistente de Física")
+with col2:
+    if not st.session_state.api_key:
+        st.title("🔑 Login para Assistente de Física")
+    
+        st.markdown(
+            """
+            Para gerar sua **API Key da Groq**, acesse:  
+            👉 [https://console.groq.com/keys](https://console.groq.com/keys)
+            """,
+            unsafe_allow_html=True,
+        )
 
-    st.markdown(
-        """
-        Para gerar sua **API Key da Groq**, acesse:  
-        👉 [https://console.groq.com/keys](https://console.groq.com/keys)
-        """,
-        unsafe_allow_html=True,
-    )
 
-    # Divide em 3 colunas, a do meio será menor
-    col1, col2, col3 = st.columns([2, 1.5, 2])  
+    api_key_input = st.text_input("Insira sua API Key da Groq:", type="password")
 
-    with col2:
-        api_key_input = st.text_input("Insira sua API Key da Groq:", type="password")
-
-        if st.button("Entrar"):
-            if api_key_input.strip():
-                try:
-                    # Testa o LLM antes de liberar
-                    llm = Groq(model="llama-3.1-8b-instant", api_key=api_key_input.strip())
-                    _ = llm.complete("Teste rápido.")
-                    st.session_state.api_key = api_key_input.strip()
-                    st.session_state.llm = llm
-                    st.success("✅ Login realizado com sucesso!")
-                    st.rerun()   # 🔄 Atualiza a tela
-                except Exception as e:
-                    st.error(f"Erro ao validar a chave: {e}")
-            else:
-                st.warning("⚠️ Digite sua chave de API para continuar.")
+    if st.button("Entrar"):
+        if api_key_input.strip():
+            try:
+                # Testa o LLM antes de liberar
+                llm = Groq(model="llama-3.1-8b-instant", api_key=api_key_input.strip())
+                _ = llm.complete("Teste rápido.")
+                st.session_state.api_key = api_key_input.strip()
+                st.session_state.llm = llm
+                st.success("✅ Login realizado com sucesso!")
+                st.rerun()   # 🔄 Atualiza a tela
+            except Exception as e:
+                st.error(f"Erro ao validar a chave: {e}")
+        else:
+            st.warning("⚠️ Digite sua chave de API para continuar.")
 
 # Página 2: Aplicação principal
 else:
