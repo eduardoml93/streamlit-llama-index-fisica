@@ -110,8 +110,6 @@ if not st.session_state.api_key:
 
 # Página 2: Aplicação principal
 else:
-    col1, col2, col3 = st.columns([1, 1.7, 1]) 
-
     with col2:
         st.title("⚛️ Assistente de Tópicos de Física")  
         topico = st.text_input(
