@@ -54,6 +54,7 @@ Use o seguinte formato na resposta:
 2. **Fórmulas principais e explicação**
 3. **Exemplos práticos e aplicações**
 4. **Observações e dicas importantes**
+5. **Exercícios resolvidos de exemplo**
 
 Use Markdown e LaTeX para formatar títulos, listas e fórmulas matemáticas.
 """
