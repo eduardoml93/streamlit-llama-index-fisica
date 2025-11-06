@@ -167,7 +167,12 @@ else:
         st.subheader("Selecione o nível e o tópico desejado:")
 
         nivel = st.selectbox("Nível", options=["1", "2", "3", "4"], format_func=lambda x: f"Física {x}")
-        topico = st.selectbox("Tópico", options=TOPICS_PHYSICS[nivel])
+        opcoes_topico = TOPICS_PHYSICS.get(nivel, [])
+        escolha_topico = st.selectbox("Tópico", options=opcoes_topico + ["Outro (digite)"])
+        if escolha_topico == "Outro (digite)":
+            topico = st.text_input("Digite o tópico desejado:")
+        else:
+            topico = escolha_topico
 
         if st.button("📘 Explicar Tópico"):
             with st.spinner("Gerando explicação detalhada..."):
