@@ -69,7 +69,7 @@ Use Markdown e LaTeX para formatar títulos, listas e fórmulas matemáticas.
 # ----------------------------
 # Interface
 # ----------------------------
-set_background("bg.jpg", darkness=0.5)
+set_background("bg.jpg", darkness=0.8) #controle escuro/claro do BG
 
 # Inicializa sessão
 if "api_key" not in st.session_state:
