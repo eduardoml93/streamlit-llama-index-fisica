@@ -6,6 +6,60 @@ import base64
 st.set_page_config(page_title="Assistente de Tópicos de Física", layout="wide")
 
 # ----------------------------
+# LISTA DE TÓPICOS DE FÍSICA ORGANIZADOS POR NÍVEL
+# ----------------------------
+TOPICS_PHYSICS = {
+    "Nível 1 - Fundamentos": [
+        "Introdução à Física", "Grandezas físicas e unidades", "Notação científica",
+        "Medição e incerteza", "Vetores e escalares", 
+        "Movimento em uma dimensão", "Velocidade, rapidez e aceleração",
+        "Gráficos de movimento", "Leis de Newton (visão geral)",
+        "Forças e diagramas de corpo livre", "Massa e peso", "Atrito",
+        "Trabalho e energia", "Energia cinética e potencial", "Potência",
+        "Lei da conservação da energia", "Máquinas simples e eficiência",
+        "Densidade e pressão", "Lei de Hooke e elasticidade",
+        "Movimento circular (básico)", "Quantidade de movimento linear e impulso",
+        "Colisões (elásticas e inelásticas)", "Gravidade (conceito introdutório)"
+    ],
+    "Nível 2 - Mecânica e Termodinâmica": [
+        "Leis de Newton em detalhe", "Aplicações das leis de Newton",
+        "Lançamento oblíquo", "Movimento circular uniforme",
+        "Teorema trabalho-energia", "Conservação da quantidade de movimento",
+        "Movimento rotacional", "Torque e momento angular",
+        "Equilíbrio de corpos rígidos", "Movimento harmônico simples",
+        "Ondas mecânicas", "Ondas sonoras e ressonância",
+        "Dilatação térmica", "Temperatura e transferência de calor",
+        "Calor específico", "Mudança de estado físico e calor latente",
+        "Leis da termodinâmica", "Máquinas térmicas e eficiência",
+        "Lei dos gases ideais", "Teoria cinética dos gases"
+    ],
+    "Nível 3 - Eletromagnetismo e Óptica": [
+        "Carga elétrica e campo elétrico", "Lei de Coulomb",
+        "Potencial elétrico e energia potencial elétrica", "Capacitância e dielétricos",
+        "Corrente, tensão e resistência", "Lei de Ohm e circuitos elétricos",
+        "Leis de Kirchhoff", "Potência e energia elétrica",
+        "Magnetismo e campos magnéticos", "Indução eletromagnética",
+        "Lei de Faraday e Lei de Lenz", "Corrente alternada (CA) e corrente contínua (CC)",
+        "Transformadores e transmissão de energia", "Ondas eletromagnéticas",
+        "A luz como onda", "Reflexão e refração", 
+        "Lentes e espelhos", "Interferência e difração",
+        "Polarização", "Efeito Doppler"
+    ],
+    "Nível 4 - Física Moderna": [
+        "Teoria quântica e fótons", "Efeito fotoelétrico",
+        "Dualidade onda-partícula", "Modelos atômicos (Bohr e posteriores)",
+        "Níveis de energia e espectros", "Estrutura nuclear e radioatividade",
+        "Meia-vida e decaimento nuclear", "Fissão e fusão nuclear",
+        "Relatividade (restrita e geral)", "Dilatação do tempo e contração do espaço",
+        "Equivalência massa-energia (E = mc²)", "Forças fundamentais da natureza",
+        "Física de partículas e Modelo Padrão", "Partículas subatômicas",
+        "Cosmologia e teoria do Big Bang", "Buracos negros e curvatura do espaço-tempo",
+        "Semicondutores e eletrônica moderna", "Supercondutividade",
+        "Aplicações da física na tecnologia", "Energia renovável e sustentabilidade"
+    ]
+}
+
+# ----------------------------
 # Funções para background
 # ----------------------------
 def get_base64_of_image(file):
@@ -33,6 +87,13 @@ def set_background(image_file="bg.jpg", darkness=0.5):
         font-weight: bold;
         width: 70%;
         margin: auto;
+    }}
+    .topic-box {{
+        background: rgba(255, 255, 255, 0.1);
+        padding: 15px;
+        border-radius: 10px;
+        margin: 10px 0;
+        border-left: 4px solid #4CAF50;
     }}
     </style>
     """
@@ -109,19 +170,61 @@ if not st.session_state.api_key:
 else:
     st.markdown('<div class="title-box">⚛️ Assistente de Tópicos de Física</div>', unsafe_allow_html=True)
 
-    col1, col2, col3 = st.columns([1,2,1])  # centraliza no meio
+    # Abas para organização
+    tab1, tab2 = st.tabs(["📚 Buscar Tópico", "🔍 Explorar Todos os Tópicos"])
+    
+    with tab1:
+        col1, col2, col3 = st.columns([1,2,1])  # centraliza no meio
+        with col2:
+            topico = st.text_input(
+                "Insira o tópico de Física", 
+                placeholder="Ex: Lei da Gravitação Universal"
+            )
+
+            if st.button("Explicar Tópico"):
+                with st.spinner("Gerando explicação..."):
+                    resposta = explicar_topico(topico)
+                    st.markdown(resposta, unsafe_allow_html=True)
+    
+    with tab2:
+        st.subheader("📖 Tópicos de Física Organizados por Nível")
+        
+        # Cria abas para cada nível
+        nivel_tabs = st.tabs(list(TOPICS_PHYSICS.keys()))
+        
+        for i, (nivel, topicos) in enumerate(TOPICS_PHYSICS.items()):
+            with nivel_tabs[i]:
+                st.markdown(f"### {nivel}")
+                st.write(f"**Total de tópicos:** {len(topicos)}")
+                
+                # Divide os tópicos em colunas para melhor visualização
+                col1, col2 = st.columns(2)
+                mid_point = len(topicos) // 2
+                
+                with col1:
+                    for j, topico in enumerate(topicos[:mid_point]):
+                        if st.button(f"📘 {topico}", key=f"{nivel}_{j}", use_container_width=True):
+                            st.session_state.selected_topic = topico
+                
+                with col2:
+                    for j, topico in enumerate(topicos[mid_point:], start=mid_point):
+                        if st.button(f"📘 {topico}", key=f"{nivel}_{j}", use_container_width=True):
+                            st.session_state.selected_topic = topico
+                
+                # Mostra explicação se um tópico foi selecionado
+                if "selected_topic" in st.session_state:
+                    st.markdown("---")
+                    st.subheader(f"Explicação: {st.session_state.selected_topic}")
+                    with st.spinner("Gerando explicação..."):
+                        resposta = explicar_topico(st.session_state.selected_topic)
+                        st.markdown(resposta, unsafe_allow_html=True)
+
+    # Botão de sair
+    col1, col2, col3 = st.columns([1,2,1])
     with col2:
-        topico = st.text_input(
-            "Insira o tópico de Física", 
-            placeholder="Ex: Lei da Gravitação Universal"
-        )
-
-        if st.button("Explicar"):
-            with st.spinner("Gerando explicação..."):
-                resposta = explicar_topico(topico)
-                st.markdown(resposta, unsafe_allow_html=True)
-
-        if st.button("🚪 Sair"):
+        if st.button("🚪 Sair", use_container_width=True):
             st.session_state.api_key = None
             st.session_state.llm = None
+            if "selected_topic" in st.session_state:
+                del st.session_state.selected_topic
             st.rerun()
