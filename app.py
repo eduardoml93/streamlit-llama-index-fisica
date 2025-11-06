@@ -166,7 +166,7 @@ else:
     with col2:
         st.subheader("Selecione o nível e o tópico desejado:")
 
-        nivel = st.selectbox("Nível", options=["1", "2", "3", "4"], format_func=lambda x: f"Nível {x}")
+        nivel = st.selectbox("Nível", options=["1", "2", "3", "4"], format_func=lambda x: f"Física {x}")
         topico = st.selectbox("Tópico", options=TOPICS_PHYSICS[nivel])
 
         if st.button("📘 Explicar Tópico"):
