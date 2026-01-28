@@ -3,7 +3,7 @@ from llama_index.llms.groq import Groq
 import base64
 
 # 🚀 Configuração da página
-st.set_page_config(page_title="Assistente de Tópicos de Física", layout="wide")
+st.set_page_config(page_title="Assistente de Tópicos de Física", page_icon="⚛️", layout="wide")
 
 # ----------------------------
 # Funções para background
